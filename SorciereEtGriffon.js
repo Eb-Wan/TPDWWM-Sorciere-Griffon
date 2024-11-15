@@ -1,7 +1,6 @@
 let witchPosition = 0;
 let griffinPosition = 50;
 const grimoirePosition = 51;
-let diceResult;
 let nextPlayer = 0;                     //(0=Witch 1=Griffin)
 let inFight = false;
 let inGame = true;
@@ -34,16 +33,14 @@ function LooseGame() {
 let NextCaracter = () => (nextPlayer === 0) ? nextPlayer = 1 : nextPlayer = 0;
 let RandomRange = (min, max) => Math.round((Math.random() * (max - min)) + min);
 while (inGame) {
-    diceResult = RandomRange(1,6);
-    MoveCaracter (diceResult, nextPlayer);          //Deplacer le personne
+    MoveCaracter (RandomRange(1,6), nextPlayer);          //Deplacer le personne
     NextCaracter ();                                //Changer de personnage pour le prochain tour
     if (inFight == true) {                          //Si le griffon et la sorcière son sur la même case
         console.log ("Le griffon et la sorcière, sont en train de se marraver!");
         if (nextPlayer == 0) PullCard();
         else {
             console.log ("Le griffon attaque la sorcière!");
-            diceResult = RandomRange(1,2);
-            if (diceResult == 2) PullCard();
+            if (RandomRange(1,2) == 2) PullCard();
             else MoveCaracter (-2, 0), console.log ("Putain, il est fort ce con!");
         }
         inFight = false;
