@@ -2,19 +2,30 @@ let witchPosition = 0;
 let griffinPosition = 50;
 const grimoirePosition = 51;
 let nextPlayer = 0;                     //(0=Witch 1=Griffin)
-let inFight = false;
+let hasFought = false;
 let inGame = true;
 function MoveCaracter(ammount, player) {
     if (player == 0) {
         witchPosition += ammount;
-        console.log ("La sorcière a avancé de", ammount, "cases.");
-        if (witchPosition >= griffinPosition) {inFight = true; witchPosition = griffinPosition;}    //Si la sorcière dépasse le griffon
+        console.log ("La sorcière a avancé de", ammount, "cases et est à la case", witchPosition+".");
+        if (witchPosition >= griffinPosition && hasFought == false) {
+            console.log ("Le griffon et la sorcière, sont en train de se marraver!");
+            hasFought = true;
+            witchPosition = griffinPosition;
+            PullCard();
+        }    //Si la sorcière dépasse le griffon
     } else {
         griffinPosition -= ammount;
-        console.log ("Le griffon a avancé de", ammount, "cases.");
-        if (witchPosition >= griffinPosition) {inFight = true; griffinPosition = witchPosition;}    //Si le griffon dépasse sorcière
+        console.log ("Le griffon a avancé de", ammount, "cases et est à la case", griffinPosition+".");
+        if (witchPosition >= griffinPosition && hasFought==false) {
+            console.log ("Le griffon attaque la sorcière!");
+            hasFought = true;
+            griffinPosition = witchPosition;
+            if (RandomRange(1,2) == 2) PullCard();
+            else MoveCaracter (-2, 0), console.log ("Put1, il est fort ce con!");
+        }    //Si le griffon dépasse sorcière
     }
-    return;
+    console.log("");
 }
 function PullCard () {
     console.log ("La sorcière tire une carte!");
@@ -35,18 +46,8 @@ let RandomRange = (min, max) => Math.round((Math.random() * (max - min)) + min);
 while (inGame) {
     MoveCaracter (RandomRange(1,6), nextPlayer);          //Deplacer le personne
     NextCaracter ();                                //Changer de personnage pour le prochain tour
-    if (inFight == true) {                          //Si le griffon et la sorcière son sur la même case
-        console.log ("Le griffon et la sorcière, sont en train de se marraver!");
-        if (nextPlayer == 0) PullCard();
-        else {
-            console.log ("Le griffon attaque la sorcière!");
-            if (RandomRange(1,2) == 2) PullCard();
-            else MoveCaracter (-2, 0), console.log ("Putain, il est fort ce con!");
-        }
-        inFight = false;
-    }
     if (witchPosition >= 51) WinGame();
-    else if (griffinPosition <= 0) LooseGame();
+    else if (griffinPosition < 0) LooseGame();
 }
 
 /*
